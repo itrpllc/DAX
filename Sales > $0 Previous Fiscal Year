@@ -1,0 +1,71 @@
+=
+
+/*
+
+  Calculated Column: Sales > $0 Previous Fiscal Year - Units that have Sales > $0 in every fiscal week end date of the previous fiscal year.
+
+*/
+
+
+VAR CurrentUnitId = 'Unit'[UnitId]
+
+-- Get the current fiscal year
+VAR CurrentFiscalYear =
+CALCULATETABLE(
+	SUMMARIZE(
+	'Calendar',
+	'Calendar'[Fiscal Year Num]
+	),
+ 	'Calendar'[Current Fiscal Year] = TRUE()
+)
+
+-- Get the list of Fiscal Week End Dates to check for Sales > $0:
+-- * Every week end date in the previous fiscal year
+VAR PYFiscalWeekEndDates = 
+    CALCULATETABLE(
+        SUMMARIZE(
+            'Calendar',
+            'Calendar'[Fiscal Week End Date]
+        ),
+        'Calendar'[Fiscal Year Num] = CurrentFiscalYear - 1
+    )
+    
+-- Store the number of Fiscal Week End Dates. This is the number of weeks that a unit
+-- needs to have where Sales are > $0
+VAR NumberOfWeeks =
+COUNTROWS(PYFiscalWeekEndDates)
+
+-- Calculate Sales for each Unit in the relevant date range.
+VAR WeeklyUnitSales =
+CALCULATETABLE(
+    ADDCOLUMNS(
+        SUMMARIZE( 
+            'Financial Summary',
+            'Unit'[UnitId], 
+            'Calendar'[Fiscal Week End Date]
+        ),
+        "PY Sales", [Sales]
+    ),
+    'Unit'[UnitId] = CurrentUnitId ,
+    PYFiscalWeekEndDates,
+    'Financial Summary Line Type'[Line Type Description] = "Net Sales"
+
+)
+
+VAR UnitSalesFilter = 
+    FILTER( 
+        WeeklyUnitSales, 
+        [PY Sales] > 0
+    )
+    
+RETURN
+	IF(
+		COUNTROWS(UnitSalesFilter) = NumberOfWeeks,
+		"Y",
+		"N"
+	)		    
+    
+    
+
+
+
