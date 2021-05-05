@@ -3,7 +3,7 @@
 /*
   Calculated Column: Last Completed Fiscal Week End Date
 
-
+	For every Full Date, set the value of the Last Completed Fiscal Week End Date based on the Fiscal Week End Date is always a Monday.
 */
 
 VAR LastCompletedFiscalWeekEndDate =
