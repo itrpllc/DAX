@@ -1,0 +1,10 @@
+Sales Track SAME STORE PCYA:= 
+
+VAR CYSales = [Sales Track SAME STORE SALES]
+VAR PYSales = [Sales Track SAME STORE SALES (PY)]
+
+RETURN
+    DIVIDE(
+        CYSales,
+        PYSales
+    ) - 1
