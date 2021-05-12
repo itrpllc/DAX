@@ -1,0 +1,10 @@
+Sales Track SAME STORE UNITS FOR TRANSACTIONS PCYA:= 
+
+VAR CYCount = [Sales Track SAME STORE TRANSACTIONS]
+VAR PYCount = [Sales Track SAME STORE TRANSACTIONS (PY)]
+
+RETURN
+    DIVIDE(
+        CYCount,
+        PYCount
+    ) - 1
