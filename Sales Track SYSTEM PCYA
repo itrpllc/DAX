@@ -1,0 +1,10 @@
+Sales Track SYSTEM PCYA:= 
+
+VAR CYSales = [Sales Track SYSTEM SALES]
+VAR PYSales = [Sales Track SYSTEM SALES (PY)]
+
+RETURN
+    DIVIDE(
+        CYSales,
+        PYSales
+    ) - 1
